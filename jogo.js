@@ -44,6 +44,18 @@ let moduloLunar = {
     rotacaoHorario: false
 }
 
+var stars = [];
+for (var i = 0; i < 500; i++) {
+    stars[i] = {
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: Math.sqrt(Math.random() * 2),
+      alpha: 1.0,
+      decreasing: true,
+      dRatio: Math.random()*0.05
+    };
+  }
+
 //Seção de visualização
 function desenharModuloLunar(){
     contexto.save();
@@ -132,11 +144,40 @@ function mostrarCombustivel(){
 }
 
 
+function drawStars() 
+{
+  contexto.save();
+  contexto.fillStyle = "#000"
+  contexto.fillRect(0, 0, canvas.width, canvas.height);
+  for (var i = 0; i < stars.length; i++) {
+    var star = stars[i];
+    contexto.beginPath();
+    contexto.arc(star.x, star.y, star.radius, 0, 2*Math.PI);
+    contexto.closePath();
+    contexto.fillStyle = "rgba(255, 255, 255, " + star.alpha + ")";
+    if (star.decreasing == true)
+    {
+      star.alpha -=star.dRatio;
+      if (star.alpha < 0.1)
+      { star.decreasing = false; }
+    }
+    else
+    {
+      star.alpha += star.dRatio;
+      if (star.alpha > 0.95)
+      { star.decreasing = true; }
+    }
+    contexto.fill();
+  }
+  contexto.restore();
+}
+
+
 function desenhar(){
     //limpar a tela
     contexto.clearRect(0, 0, canvas.width, canvas.height);
     //Esta função atualiza a posição do módulo lunar em função da gravidade
-    
+    drawStars();
     atracaoGravitacional();
     desenharModuloLunar();
     mostrarAltitude();
@@ -144,6 +185,7 @@ function desenhar(){
     mostrarVelocidadeHorizontal();
     mostrarVelocidadeVertical();
     mostrarCombustivel();
+    
     //Esta função repete a execução da função desenhar a cada quadro
     if(moduloLunar.posicao.y >= (canvas.height - 0.5 * moduloLunar.altura )){
         
