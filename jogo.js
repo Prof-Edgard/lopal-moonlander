@@ -121,6 +121,8 @@ function mostrarCombustivel(){
 
 function desenharEstrelas(){
     contexto.save();
+    contexto.fillStyle= "#000";
+    contexto.fillRect(0,0, canvas.width, canvas.height);
     for(let i = 0; i < estrelas.length; i++){
         let estrela = estrelas[i];
         contexto.beginPath();
